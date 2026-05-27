@@ -51,7 +51,3 @@ class Logger {
 }
 
 export const createLogger = (context) => new Logger(context)
-
-export const logger = new Logger('Portfolio')
-
-export default logger

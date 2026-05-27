@@ -31,7 +31,7 @@ export const measurePerformance = () => {
         
         try {
           observer.observe({ entryTypes: ['largest-contentful-paint'] })
-        } catch (e) {
+        } catch {
           console.warn('Performance observer not supported')
         }
       }
@@ -55,21 +55,4 @@ export const measureWebVitals = async () => {
   } catch (error) {
     console.warn('Web Vitals not available:', error)
   }
-}
-
-export const reportError = (error, errorInfo = {}) => {
-  if (import.meta.env.DEV) {
-    console.error('Application Error:', error, errorInfo)
-    return
-  }
-
-  if (window.gtag) {
-    window.gtag('event', 'exception', {
-      description: error.toString(),
-      fatal: false,
-      ...errorInfo,
-    })
-  }
-
-  console.error('Application Error:', error, errorInfo)
 }
