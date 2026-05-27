@@ -9,7 +9,7 @@ class ErrorBoundary extends React.Component {
     this.state = { hasError: false, error: null, errorInfo: null }
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { hasError: true }
   }
 
@@ -35,7 +35,7 @@ class ErrorBoundary extends React.Component {
             <div className="text-center">
               <div className="mb-4">
                 <svg
-                  className="mx-auto h-12 w-12 text-sky-500"
+                  className="mx-auto size-12 text-sky-500"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -55,6 +55,7 @@ class ErrorBoundary extends React.Component {
                 We're sorry for the inconvenience. Please try refreshing the page.
               </p>
               <button
+                type="button"
                 onClick={() => window.location.reload()}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200"
               >

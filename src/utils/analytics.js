@@ -13,36 +13,12 @@ export const initAnalytics = () => {
 
   window.dataLayer = window.dataLayer || []
   function gtag() {
-    dataLayer.push(arguments)
+    window.dataLayer.push(arguments)
   }
   window.gtag = gtag
 
   gtag('js', new Date())
   gtag('config', GA_TRACKING_ID, {
-    page_title: document.title,
-    page_location: window.location.href,
-  })
-}
-
-export const trackEvent = (eventName, parameters = {}) => {
-  if (!ANALYTICS_ENABLED || !window.gtag || import.meta.env.DEV) {
-    return
-  }
-
-  window.gtag('event', eventName, {
-    event_category: 'engagement',
-    event_label: window.location.pathname,
-    ...parameters,
-  })
-}
-
-export const trackPageView = (pagePath) => {
-  if (!ANALYTICS_ENABLED || !window.gtag || import.meta.env.DEV) {
-    return
-  }
-
-  window.gtag('config', GA_TRACKING_ID, {
-    page_path: pagePath,
     page_title: document.title,
     page_location: window.location.href,
   })
