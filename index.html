@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pranav Swaroop — Applied AI Scientist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg: #b8d8eb;
+  --bg-2: #d9e9f1;
+  --ink: #1a2434;
+  --ink-soft: #43536b;
+  --muted: #7d8a9d;
+  --line: #1a2434;
+  --line-soft: rgba(26,36,52,.18);
+  --paper: #f6f1e6;
+  --accent: #d97757;
+  --accent-2: #2a6fa3;
+  --accent-3: #6f9a4a;
+  --serif: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter Tight', system-ui, -apple-system, Helvetica, Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+*{ box-sizing: border-box; }
+html, body{ margin:0; padding:0; }
+html{ scroll-behavior: auto; background: var(--bg); }
+body{
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--bg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ------- Three.js sticky canvas ------- */
+#scene-host{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+#scene-host canvas{ display:block; width:100%; height:100%; }
+
+/* ------- Scroll page (one section per scene chapter) ------- */
+.page{
+  position: relative;
+  z-index: 2;
+}
+section.chapter{
+  min-height: 100vh;
+  padding: 10vh 6vw;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+section.chapter[data-side="right"]{ justify-content: flex-end; }
+section.chapter[data-side="left"]{ justify-content: flex-start; }
+section.chapter[data-side="center"]{ justify-content: center; }
+
+/* ------- Content panels — paper cards floating over the world ------- */
+.panel{
+  width: min(560px, 100%);
+  background: rgba(246,241,230,.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  padding: 36px 38px;
+  position: relative;
+  box-shadow: 0 30px 60px -30px rgba(26,36,52,.45),
+              0 1px 0 rgba(255,255,255,.6) inset;
+}
+.panel.wide{ width: min(820px, 100%); }
+.panel.huge{ width: min(1100px, 100%); }
+.panel .eyebrow{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.panel .eyebrow::before{
+  content:"";
+  width: 28px; height: 1px;
+  background: var(--ink-soft);
+}
+.panel h1, .panel h2, .panel h3{
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin: 0 0 18px;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.panel h1{ font-size: clamp(40px, 5.4vw, 76px); line-height: 1; }
+.panel h2{ font-size: clamp(28px, 3.4vw, 44px); line-height: 1.05; }
+.panel h3{ font-size: clamp(20px, 2vw, 26px); line-height: 1.15; margin-bottom: 10px; }
+.panel p{
+  margin: 0 0 14px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+.panel p.lead{ font-size: 18px; color: var(--ink); }
+.panel hr{
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+  margin: 22px 0;
+}
+
+/* Hero */
+.hero-panel{
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  width: min(900px, 100%);
+}
+.hero-panel .name{
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(56px, 9vw, 132px);
+  line-height: .95;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: var(--ink);
+}
+.hero-panel .name em{
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent-2);
+}
+.hero-panel .role{
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 28px 0 0;
+  display: flex; gap: 18px; flex-wrap: wrap;
+  align-items: center;
+}
+.hero-panel .role span.dot{
+  display:inline-block; width:6px; height:6px; border-radius:50%;
+  background: var(--accent);
+}
+.hero-panel .tagline{
+  margin-top: 26px;
+  max-width: 560px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.hero-panel .scroll-cue{
+  margin-top: 56px;
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.hero-panel .scroll-cue .line{
+  width: 50px; height: 1px; background: var(--ink-soft);
+  position: relative; overflow: hidden;
+}
+.hero-panel .scroll-cue .line::after{
+  content:""; position:absolute; inset:0;
+  background: var(--accent);
+  animation: cue 2.4s ease-in-out infinite;
+}
+@keyframes cue{
+  0%{ transform: translateX(-100%); }
+  60%{ transform: translateX(0); }
+  100%{ transform: translateX(100%); }
+}
+
+/* Top nav */
+.nav{
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 32px;
+  pointer-events: none;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  mix-blend-mode: multiply;
+}
+.nav .brand{ pointer-events:auto; display:flex; align-items:center; gap:10px; }
+.nav .brand .mark{
+  width: 28px; height: 28px;
+  display: inline-grid;
+  place-items: center;
+  position: relative;
+}
+.nav .brand .mark svg{ display:block; }
+.nav ul{
+  list-style:none; display:flex; gap: 22px; margin:0; padding:0;
+  pointer-events: auto;
+}
+.nav a{
+  color: inherit; text-decoration: none; opacity: .65;
+  transition: opacity .2s, color .2s;
+}
+.nav a:hover{ opacity: 1; color: var(--accent); }
+.nav a.active{ opacity: 1; }
+.nav a.active::before{
+  content:"●"; margin-right: 6px; color: var(--accent);
+}
+
+/* Chapter labels (top right) */
+.chapter-tag{
+  position: fixed;
+  top: 72px; right: 32px;
+  z-index: 40;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-align: right;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.chapter-tag .num{ font-size: 11px; color: var(--ink); }
+.chapter-tag .where{ color: var(--accent); }
+
+/* Side rail with section indicators */
+.rail{
+  position: fixed;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex; flex-direction: column;
+  gap: 14px;
+  pointer-events: auto;
+}
+.rail button{
+  appearance:none; border:0; background: transparent;
+  width: 14px; height: 14px;
+  display: grid; place-items: center;
+  cursor: pointer; padding: 0;
+}
+.rail button::after{
+  content:""; width: 7px; height: 7px;
+  background: var(--ink); opacity:.35; border-radius: 50%;
+  transition: all .25s;
+}
+.rail button:hover::after{ opacity:.7; }
+.rail button.active::after{ opacity:1; background: var(--accent); width: 9px; height: 9px; }
+
+/* About — portrait + bio */
+.about-grid{
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+.portrait{
+  width: 200px; height: 200px;
+  background: var(--ink);
+  border: 1px solid var(--line);
+  display: grid; place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.portrait svg{ width: 100%; height: 100%; display:block; }
+
+/* Stats row */
+.stats{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line-soft);
+}
+.stats .stat .num{
+  font-family: var(--serif);
+  font-size: 36px;
+  line-height: 1;
+  color: var(--ink);
+  font-weight: 400;
+}
+.stats .stat .lbl{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 6px;
+}
+
+/* Place-card layout for journey chapters */
+.place-card{
+  width: min(540px, 100%);
+}
+.place-card .place-head{
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.place-card .city{
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--accent);
+  letter-spacing: .02em;
+}
+.place-card .years{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  color: var(--ink-soft);
+}
+.place-card ul{
+  list-style:none; padding:0; margin: 16px 0 0;
+  border-top: 1px solid var(--line-soft);
+}
+.place-card ul li{
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line-soft);
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 18px;
+  align-items: baseline;
+}
+.place-card ul li .k{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.place-card .badges{
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-top: 18px;
+}
+.place-card .badge{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid var(--line-soft);
+  color: var(--ink-soft);
+  background: rgba(255,255,255,.5);
+}
+
+/* Research / DNA chapter */
+.research-wrap{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: stretch;
+}
+.research-wrap .left{
+  background: rgba(15,22,38,.92);
+  color: #e8eef7;
+  border: 1px solid var(--ink);
+  padding: 36px 38px;
+  position: relative;
+}
+.research-wrap .left h2{ color: #fff; }
+.research-wrap .left p{ color: rgba(232,238,247,.78); }
+.research-wrap .left .eyebrow{ color: rgba(232,238,247,.6); }
+.research-wrap .left .eyebrow::before{ background: rgba(232,238,247,.5); }
+
+.dna-card{
+  position: relative;
+  border: 1px solid var(--ink);
+  background: #0c1424;
+  overflow: hidden;
+  min-height: 460px;
+}
+#dna-canvas{ position: absolute; inset: 0; width:100%; height:100%; }
+.dna-card .dna-overlay{
+  position: absolute;
+  left: 24px; right: 24px; bottom: 22px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  color: rgba(255,255,255,.55);
+  text-transform: uppercase;
+  display: flex; justify-content: space-between;
+  pointer-events: none;
+}
+.dna-card .dna-overlay .pair{
+  font-family: var(--mono);
+  color: var(--accent);
+}
+
+/* Pubs */
+.pub-list{ display:grid; gap: 10px; margin-top: 18px; }
+.pub-list .pub{
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid rgba(255,255,255,.12);
+  font-size: 14px;
+  align-items: baseline;
+}
+.pub-list .pub:first-child{ border-top: 0; }
+.pub-list .pub .yr{
+  font-family: var(--mono); font-size: 11px;
+  color: var(--accent); letter-spacing: .2em;
+}
+.pub-list .pub .ttl{ color: #fff; line-height: 1.4; }
+.pub-list .pub .venue{
+  font-family: var(--mono); font-size: 11px;
+  color: rgba(255,255,255,.5); letter-spacing: .14em;
+  text-transform: uppercase; white-space: nowrap;
+}
+
+/* Skills timeline */
+.skills-card{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 36px 40px;
+  width: min(1100px, 100%);
+}
+.skills-track{
+  position: relative;
+  margin-top: 30px;
+  padding: 36px 0 60px;
+}
+.skills-track::before{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 1px;
+  background: var(--line);
+  transform: translateY(-50%);
+}
+.skills-track::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: 5px;
+  background: var(--accent);
+  transform: translateY(-50%) scaleX(var(--prog,0));
+  transform-origin: left center;
+  opacity: .25;
+}
+.skills-row{
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0;
+  position: relative;
+}
+.skill-node{
+  position: relative;
+  text-align: center;
+}
+.skill-node .dot{
+  width: 38px; height: 38px;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  margin: 0 auto;
+  position: relative;
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: .04em;
+  color: var(--ink);
+  z-index: 2;
+  transition: all .25s ease;
+}
+.skill-node.active .dot{
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  transform: scale(1.15);
+}
+.skill-node .yr{
+  position: absolute;
+  top: -28px; left: 50%; transform: translateX(-50%);
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: .18em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.skill-node .lbl{
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.skill-node.active .lbl{ color: var(--ink); }
+
+.stack-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 1px;
+  background: var(--line-soft);
+  margin-top: 28px;
+  border: 1px solid var(--line);
+}
+.stack-grid .tech{
+  background: var(--paper);
+  padding: 14px 12px;
+  display: flex; flex-direction: column;
+  align-items: flex-start; gap: 4px;
+  font-size: 12px;
+  color: var(--ink);
+  min-height: 58px;
+}
+.stack-grid .tech .glyph{
+  font-family: var(--mono); font-size: 10px;
+  color: var(--accent); letter-spacing: .12em;
+}
+
+/* Gallery */
+.gallery-card{
+  background: var(--paper);
+  border: 1px solid var(--line);
+  padding: 36px 40px;
+  width: min(1100px, 100%);
+}
+.gallery-grid{
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 220px 220px;
+  gap: 1px;
+  background: var(--line-soft);
+  margin-top: 24px;
+  border: 1px solid var(--line);
+}
+.gallery-grid > *{ min-width: 0; min-height: 0; }
+.gallery-grid > *:nth-child(1){ grid-row: span 2; }
+
+/* Contact */
+.contact-card{
+  background: var(--ink);
+  color: #f6f1e6;
+  padding: 56px 60px;
+  width: min(960px, 100%);
+  border: 1px solid var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+.contact-card h2{ color: #f6f1e6; }
+.contact-card .eyebrow{ color: rgba(246,241,230,.6); }
+.contact-card .eyebrow::before{ background: rgba(246,241,230,.5); }
+.contact-card p{ color: rgba(246,241,230,.8); }
+.contact-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: 36px;
+}
+.contact-grid a{
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 22px 0;
+  border-top: 1px solid rgba(246,241,230,.15);
+  text-decoration: none;
+  color: #f6f1e6;
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  transition: color .2s;
+}
+.contact-grid a:hover{ color: var(--accent); }
+.contact-grid a:nth-child(odd){ padding-right: 22px; }
+.contact-grid a:nth-child(even){ padding-left: 22px; border-left: 1px solid rgba(246,241,230,.15); }
+.contact-grid a span{
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .24em; color: rgba(246,241,230,.5);
+  text-transform: uppercase;
+}
+.contact-card .footer-meta{
+  display: flex; justify-content: space-between;
+  margin-top: 50px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  color: rgba(246,241,230,.5);
+  text-transform: uppercase;
+}
+
+/* Compass — small inset map showing journey */
+.compass{
+  position: fixed;
+  left: 32px; bottom: 28px;
+  z-index: 40;
+  width: 200px;
+  background: rgba(246,241,230,.92);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+  pointer-events: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.compass .row{
+  display:flex; justify-content: space-between;
+  color: var(--ink-soft);
+}
+.compass .row .v{ color: var(--ink); }
+.compass .bar{
+  height: 4px; background: var(--line-soft);
+  margin: 8px 0; position: relative;
+}
+.compass .bar::after{
+  content:""; position:absolute; inset:0 auto 0 0;
+  width: var(--prog, 0%); background: var(--accent);
+  transition: width .15s;
+}
+.compass .stops{
+  display: flex; justify-content: space-between;
+  padding-top: 6px;
+  font-size: 8px; letter-spacing: .04em;
+  gap: 4px;
+}
+.compass .stops span{ white-space: nowrap; }
+.compass .stops span{ color: var(--ink-soft); }
+.compass .stops span.on{ color: var(--accent); }
+
+/* Dawn / Day / Dusk / Night palette swaps via attribute */
+body[data-time="dawn"]{
+  --bg: #f3c9a8; --bg-2: #fadbb8; --ink: #2a1a2c; --ink-soft: #5b3a4f;
+  --accent: #d97757; --accent-2: #a3457b; --accent-3: #e0a060;
+  --paper: #fbf1e2;
+}
+body[data-time="day"]{
+  --bg: #b8d8eb; --bg-2: #d9e9f1; --ink: #1a2434; --ink-soft: #43536b;
+  --accent: #d97757; --accent-2: #2a6fa3; --accent-3: #6f9a4a;
+  --paper: #f6f1e6;
+}
+body[data-time="dusk"]{
+  --bg: #d6a896; --bg-2: #e6c1a6; --ink: #2a1828; --ink-soft: #5d3744;
+  --accent: #cf5a3a; --accent-2: #6a3568; --accent-3: #c98850;
+  --paper: #f3e6d2;
+}
+body[data-time="night"]{
+  --bg: #1a2334; --bg-2: #243049; --ink: #f4ecdc; --ink-soft: #b8c2d6;
+  --accent: #f0a85a; --accent-2: #6f9bd1; --accent-3: #9bc176;
+  --paper: #1f2a3f;
+  --line: #f4ecdc;
+  --line-soft: rgba(244,236,220,.18);
+}
+
+/* Loading splash */
+#splash{
+  position: fixed; inset: 0;
+  background: var(--bg);
+  z-index: 200;
+  display: grid; place-items: center;
+  transition: opacity .8s ease;
+  font-family: var(--mono);
+  letter-spacing: .24em;
+  font-size: 11px;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+#splash.gone{ opacity:0; pointer-events: none; }
+#splash .pulse{
+  width: 36px; height: 36px;
+  border: 1.5px solid var(--ink);
+  transform: rotate(45deg);
+  animation: pulse 1.6s ease-in-out infinite;
+  margin-bottom: 18px;
+}
+#splash .pulse > span{
+  display:block; width:100%; height:100%;
+  background: var(--accent);
+  animation: pulse-in 1.6s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{ transform: rotate(45deg) scale(.85); }
+  50%{ transform: rotate(45deg) scale(1.1); }
+}
+@keyframes pulse-in{
+  0%,100%{ transform: scale(.4); opacity: .4; }
+  50%{ transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 880px){
+  .nav ul{ display:none; }
+  .rail{ display: none; }
+  .compass{ display:none; }
+  section.chapter{ padding: 14vh 5vw; }
+  .panel{ padding: 26px 24px; }
+  .research-wrap{ grid-template-columns: 1fr; }
+  .about-grid{ grid-template-columns: 1fr; }
+  .gallery-grid{ grid-template-columns: 1fr 1fr; grid-template-rows: 200px 200px 200px; }
+  .gallery-grid > *:nth-child(1){ grid-row: auto; grid-column: span 2; }
+  .contact-grid{ grid-template-columns: 1fr; }
+  .contact-grid a:nth-child(even){ padding-left: 0; border-left: 0; }
+}
+</style>
+</head>
+<body data-time="day" style="background-color: rgb(241, 241, 241)">
+
+<!-- Splash -->
+<div id="splash"><div><div class="pulse"><span></span></div>Composing landscape…</div></div>
+
+<!-- Three.js sticky scene -->
+<div id="scene-host"></div>
+
+<!-- Nav -->
+<header class="nav">
+  <div class="brand">
+    <span class="mark" aria-label="PSG monogram">
+      <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
+        <rect x="3" y="3" width="26" height="26" transform="rotate(45 16 16)" fill="var(--accent)" stroke="var(--ink)" stroke-width="1.4"/>
+        <text x="16" y="19.5" text-anchor="middle" font-family="'Fraunces', Georgia, serif" font-size="11" font-weight="600" fill="var(--ink)" letter-spacing="-0.5">PSG</text>
+      </svg>
+    </span>
+    <span>Pranav&nbsp;Swaroop · Portfolio · 2026</span>
+  </div>
+  <ul>
+    <li><a href="#about" data-link="about">About</a></li>
+    <li><a href="#origins" data-link="origins">Origins</a></li>
+    <li><a href="#research" data-link="research">Research</a></li>
+    <li><a href="#stack" data-link="stack">Stack</a></li>
+    <li><a href="#contact" data-link="contact">Contact</a></li>
+  </ul>
+</header>
+
+<!-- Side rail -->
+<nav class="rail" id="rail" aria-label="Sections"></nav>
+
+<!-- Top-right contextual chapter tag -->
+<div class="chapter-tag" id="chapterTag">
+  <span class="num">CH 01 / 10</span>
+  <span class="where">∅ Hero</span>
+</div>
+
+<!-- Compass / journey HUD -->
+<div class="compass" id="compass">
+  <div class="row"><span>Journey</span><span class="v" id="compass-pct">0%</span></div>
+  <div class="bar" style="--prog:0%"></div>
+  <div class="stops">
+    <span data-stop="0">Orig</span>
+    <span data-stop="1">Hyd</span>
+    <span data-stop="2">Mnpl</span>
+    <span data-stop="3">Alps</span>
+    <span data-stop="4">Ess</span>
+  </div>
+</div>
+
+<!-- Page content (scroll drives camera) -->
+<main class="page">
+
+  <!-- 0: HERO -->
+  <section class="chapter" data-chapter="0" data-side="left" data-label="Prologue" data-where="∅ Origin">
+    <div class="hero-panel">
+      <p class="eyebrow"><span class="mark" style="display:inline-block;width:8px;height:8px;background:var(--accent);transform:rotate(45deg);margin-right:8px;"></span>Portfolio of a budding applied AI scientist</p>
+      <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;margin-bottom:8px;">
+        <image-slot id="hero-avatar" shape="circle" placeholder="Drop your avatar" src="/portfolio/images/profile/avatar.png" style="width:128px;height:128px;border-radius:50%;overflow:hidden;box-shadow:0 18px 40px -20px rgba(26,36,52,.5);background-color: rgba(246, 241, 230, 0);"></image-slot>
+        <h1 class="name" style="margin: 0; font-family: Times; text-align: center">Gundla<br/><em style="font-family: Times">Pranav Swaroop</em></h1>
+      </div>
+      <div class="role">
+        <span>Computational Oncology</span>
+        <span class="dot"></span>
+        <span>VISION LEARNING</span>
+        <span class="dot"></span>
+        <span>BIOINFORMATICS</span>
+      </div>
+      <p class="tagline">Working with deep-learning to uncover the secrets of oncology — and, in the slow accumulation of small things, to make the world a slightly better place.</p>
+      <div class="scroll-cue"><span class="line"></span> Scroll to begin the journey</div>
+    </div>
+  </section>
+
+  <!-- 1: ABOUT -->
+  <section id="about" class="chapter" data-chapter="1" data-side="right" data-label="About" data-where="○ Profile">
+    <div class="panel" style="background-color: rgb(230, 239, 246)">
+      <p class="eyebrow">01 — About</p>
+      <h2>A researcher who keeps walking toward the work that matters.</h2>
+      <div class="about-grid">
+        <div class="portrait" aria-hidden="true">
+          <!-- Geometric portrait placeholder -->
+          <svg viewBox="0 0 200 200">
+            <rect width="200" height="200" fill="#1a2434"/>
+            <circle cx="100" cy="86" r="44" fill="#d97757"/>
+            <rect x="56" y="130" width="88" height="80" fill="#43536b"/>
+            <rect x="78" y="78" width="20" height="14" fill="#1a2434"/>
+            <rect x="102" y="78" width="20" height="14" fill="#1a2434"/>
+            <rect x="78" y="76" width="44" height="2" fill="#1a2434"/>
+            <path d="M 84 110 Q 100 116 116 110" stroke="#1a2434" stroke-width="2" fill="none"/>
+          </svg>
+        </div>
+        <div>
+          <p class="lead">PhD researcher at the Institute for AI in Medicine, University Hospital Essen — building vision-based deep-learning models that read whole-slide histopathology and predict the genomic alterations driving diffuse gliomas.</p>
+          <p>Trained on the largest publicly available glioma WSI cohort (≈5,000 slides) at the Kocakavuk Lab. Patches → features → attention → explainability. The goal: interpretable, scalable AI that survives multi-cohort validation and earns its way into the clinic.</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">5K+</div><div class="lbl">WSIs trained on</div></div>
+        <div class="stat"><div class="num">3</div><div class="lbl">Publications · pre-prints</div></div>
+        <div class="stat"><div class="num">9 hrs</div><div class="lbl">Music / day · lofi & classical</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2: ORIGINS — Charminar -->
+  <section id="origins" class="chapter" data-chapter="2" data-side="left" data-label="Origins" data-where="◆ Hyderabad, IN">
+    <div class="panel place-card" style="background-color: rgb(230, 239, 246)">
+      <p class="eyebrow">02 — Origins · 17.3616° N</p>
+      <div class="place-head">
+        <h2>Hyderabad</h2>
+        <span class="years">2015 — 2018</span>
+      </div>
+      <div class="city">Osmania University · Hyderabad, India</div>
+      <p style="margin-top:14px">A bachelor's that mixed mathematics, electronics and computer science — the wide-base curriculum that taught me to read systems, to reason from first principles, and to enjoy debugging both circuits and code. The minarets in the distance are where the discipline started.</p>
+      <ul>
+        <li><span class="k">Degree</span><span>BSc Mathematics, Electronics & Computer Science</span></li>
+        <li><span class="k">Outreach</span><span>Tutor for matriculation students; volunteer instructor of MS-Office fundamentals to children</span></li>
+        <li><span class="k">Workshop</span><span>Instructor for ~40 participants over two weeks · Arduino / IoT</span></li>
+      </ul>
+      <div class="badges">
+        <span class="badge">Mathematics</span>
+        <span class="badge">Electronics</span>
+        <span class="badge">CS Foundations</span>
+        <span class="badge">Teaching</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3: MANIPAL — Beach -->
+  <section class="chapter" data-chapter="3" data-side="right" data-label="Education" data-where="◆ Manipal, IN">
+    <div class="panel place-card" style="background-color: rgb(230, 239, 246)">
+      <p class="eyebrow">03 — Education · 13.3525° N</p>
+      <div class="place-head">
+        <h2>The coast at Manipal</h2>
+        <span class="years">2018 — 2019</span>
+      </div>
+      <div class="city">Manipal Academy of Higher Education · Karnataka</div>
+      <p style="margin-top:14px">A master's where the work became biological. Sequence alignments, phylogenetics, functional genomics — bioinformatics, clean and quiet, against the sound of the Arabian Sea. The wide-base year before the work moved to the Alps.</p>
+      <ul>
+        <li><span class="k">Degree</span><span>MSc Bioinformatics · Year 1 of 2</span></li>
+        <li><span class="k">Focus</span><span>NGS · sequence alignments · phylogenetics · functional genomics</span></li>
+      </ul>
+      <div class="badges">
+        <span class="badge">Genomics</span>
+        <span class="badge">Phylogenetics</span>
+        <span class="badge">R / Python</span>
+        <span class="badge">Wet-lab adjacent</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4: GRENOBLE ALPES — Master thesis · scholarship · industry -->
+  <section class="chapter" data-chapter="4" data-side="left" data-label="Grenoble Alpes" data-where="◆ Grenoble Alpes, FR">
+    <div class="panel place-card" style="background-color: rgb(230, 239, 246)">
+      <p class="eyebrow">04 — Grenoble Alpes · 45.1885° N</p>
+      <div class="place-head">
+        <h2>Where the work moved to the Alps.</h2>
+        <span class="years">2019 — 2023</span>
+      </div>
+      <div class="city">Université Grenoble Alpes · IAB · Plantik Biosciences · Mbiomics LLC</div>
+      <p style="margin-top:14px">The mountains taught patience. A master thesis at the Institute for Advanced Biosciences, then a long bridge into industry — cloud pipelines for plant breeding, biomarker work in esophageal cancer, and the conferences that introduced me to the people I still write papers with.</p>
+      <ul>
+        <li><span class="k">Degree</span><span>MSc Healthy Living Technologies · UGA Grenoble · 2019 — 2020</span></li>
+        <li><span class="k">M2 thesis</span><span><em>Initiation of a lung adenocarcinoma cartography around TP53 activity</em> · IAB · Dr. Cyril Boyault</span></li>
+        <li><span class="k">Funding</span><span>Scholarship from IDEX & UGA Foundation for the M2 program</span></li>
+        <li><span class="k">Honour</span><span>1<sup>st</sup> position, Hackathon — Congrès National Des Pharmaciens, Bordeaux</span></li>
+        <li><span class="k">Plantik</span><span>Computational Biology & AI Consultant — cloud architecture for plant breeding (Python / R)</span></li>
+        <li><span class="k">Mbiomics</span><span>Bioinformatics Scientist (Contract) — biomarker identification in ESCC</span></li>
+        <li><span class="k">Output</span><span>Two Cancer-Biomarkers / Infectious-Agents-and-Cancer publications</span></li>
+      </ul>
+      <div class="badges">
+        <span class="badge">M2 Thesis · IAB</span>
+        <span class="badge">GCP / AWS</span>
+        <span class="badge">Bioinformatics</span>
+        <span class="badge">Biomarkers</span>
+        <span class="badge">NGS</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5: ESSEN — Zollverein -->
+  <section class="chapter" data-chapter="5" data-side="right" data-label="PhD · Essen" data-where="◆ Essen, DE">
+    <div class="panel place-card" style="background-color: rgb(230, 239, 246)">
+      <p class="eyebrow">05 — PhD · 51.4885° N</p>
+      <div class="place-head">
+        <h2>Zollverein, Essen</h2>
+        <span class="years">2022 — Present</span>
+      </div>
+      <div class="city">Institute for AI in Medicine · Kocakavuk Lab · University Hospital Essen</div>
+      <p style="margin-top:14px">A coal-mine turned UNESCO site, repurposed for new work — fitting metaphor for a thesis that re-purposes histopathology slides into a substrate for AI. Weakly-supervised learning, vision transformers, attention as explanation, and pipelines that survive the move from one institution to the next.</p>
+      <ul>
+        <li><span class="k">Lab</span><span>Kocakavuk Lab · IKIM</span></li>
+        <li><span class="k">Subject</span><span>Genotype-to-phenotype in adult diffuse gliomas (IDH, 1p/19q, CDKN2A)</span></li>
+        <li><span class="k">Method</span><span>Weakly-supervised MIL · vision transformers · attention heatmaps · cross-cohort validation</span></li>
+        <li><span class="k">Infra</span><span>SLURM HPC · Docker / Apptainer · Snakemake · Nextflow-style reproducibility</span></li>
+      </ul>
+      <div class="badges">
+        <span class="badge">Gliomas</span>
+        <span class="badge">WSI · MIL</span>
+        <span class="badge">ViT</span>
+        <span class="badge">Multi-omics</span>
+        <span class="badge">HPC</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6: RESEARCH + DNA -->
+  <section id="research" class="chapter" data-chapter="6" data-side="center" data-label="Research" data-where="◆ Selected work">
+    <div class="panel huge" style="background:transparent;border:0;box-shadow:none;padding:0;">
+      <div class="research-wrap">
+        <div class="left">
+          <p class="eyebrow">06 — Selected research</p>
+          <h2>Reading the genome from the slide.</h2>
+          <p>Diffuse gliomas carry molecular fingerprints — IDH mutation, 1p/19q codeletion, CDKN2A loss — that determine prognosis. The slide already encodes morphology; the question is whether vision can recover the genotype. The work below is a partial answer.</p>
+          <div class="pub-list">
+            <div class="pub">
+              <span class="yr">2025</span>
+              <span class="ttl">278P · Genetic subtype prediction in diffuse gliomas with a vision-transformer-based model</span>
+              <span class="venue">ESMO RWD</span>
+            </div>
+            <div class="pub">
+              <span class="yr">2025</span>
+              <span class="ttl">Tumor-initiating genetics and therapy drive divergent molecular evolution in IDH-mutant gliomas</span>
+              <span class="venue">medRxiv</span>
+            </div>
+            <div class="pub">
+              <span class="yr">2025</span>
+              <span class="ttl">Real-World Data and Digital Oncology — ESMO AI Conference Abstract · DOI 10.1016/j.esmorw.2025.100474</span>
+              <span class="venue">ESMO AI</span>
+            </div>
+            <div class="pub">
+              <span class="yr">2023</span>
+              <span class="ttl">Global comparative transcriptomes uncover novel and population-specific gene expression in ESCC</span>
+              <span class="venue">Infectious Agents & Cancer</span>
+            </div>
+            <div class="pub">
+              <span class="yr">2023</span>
+              <span class="ttl">A comprehensive analysis of mRNA expression profiles of ESCC reveals downregulation of Desmoglein 1</span>
+              <span class="venue">Cancer Biomarkers</span>
+            </div>
+          </div>
+        </div>
+        <div class="dna-card">
+          <canvas id="dna-canvas" style="opacity: 50"></canvas>
+          <div class="dna-overlay">
+            <span>Helix · live render</span>
+            <span><span class="pair">A·T</span> &nbsp; <span class="pair">G·C</span> &nbsp; <span class="pair">C·G</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7: SKILLS / STACK -->
+  <section id="stack" class="chapter" data-chapter="7" data-side="center" data-label="Stack" data-where="◆ The stack, on a timeline">
+    <div class="skills-card" style="background-color: rgb(230, 239, 246)">
+      <p class="eyebrow">07 — Stack & timeline</p>
+      <h2 style="font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,44px);margin:0 0 12px;letter-spacing:-0.02em;">Where the tools entered the work.</h2>
+      <p style="color:var(--ink-soft);max-width:680px;line-height:1.55;">A timeline is the honest way to draw a stack: not as a wall of logos, but as the order in which each tool earned its place. Picked up at university, sharpened in industry, and now driving research at scale.</p>
+      <div class="skills-track">
+        <div class="skills-row">
+          <div class="skill-node" data-yr="2014">
+            <div class="yr">2014</div><div class="dot">C</div>
+            <div class="lbl">Arduino &amp; C — first taste of building things that respond</div>
+          </div>
+          <div class="skill-node" data-yr="2015">
+            <div class="yr">2015</div><div class="dot">M</div>
+            <div class="lbl">Math foundations · MS-Office tutoring</div>
+          </div>
+          <div class="skill-node" data-yr="2017">
+            <div class="yr">2017</div><div class="dot">Py</div>
+            <div class="lbl">Python — the working language of everything since</div>
+          </div>
+          <div class="skill-node" data-yr="2018">
+            <div class="yr">2018</div><div class="dot">R</div>
+            <div class="lbl">R, NGS, sequence alignments — bioinformatics proper</div>
+          </div>
+          <div class="skill-node" data-yr="2020">
+            <div class="yr">2020</div><div class="dot">∂</div>
+            <div class="lbl">PyTorch &amp; deep learning · TP53 thesis</div>
+          </div>
+          <div class="skill-node" data-yr="2022">
+            <div class="yr">2022</div><div class="dot">☁</div>
+            <div class="lbl">GCP, AWS, Docker, Apptainer — production cloud</div>
+          </div>
+          <div class="skill-node" data-yr="2023">
+            <div class="yr">2023</div><div class="dot">ViT</div>
+            <div class="lbl">Vision Transformers, MIL, attention — WSIs at scale</div>
+          </div>
+          <div class="skill-node" data-yr="2025">
+            <div class="yr">Now</div><div class="dot">★</div>
+            <div class="lbl">SLURM HPC · multi-cohort validation · interpretable AI</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stack-grid">
+        <div class="tech"><span class="glyph">VISION/ML</span>PyTorch</div>
+        <div class="tech"><span class="glyph">VISION/ML</span>Vision Transformers</div>
+        <div class="tech"><span class="glyph">VISION/ML</span>CNNs · MIL</div>
+        <div class="tech"><span class="glyph">VISION/ML</span>scikit-learn</div>
+        <div class="tech"><span class="glyph">LANG</span>Python</div>
+        <div class="tech"><span class="glyph">LANG</span>R</div>
+        <div class="tech"><span class="glyph">LANG</span>Julia</div>
+        <div class="tech"><span class="glyph">LANG</span>Bash</div>
+        <div class="tech"><span class="glyph">LANG</span>JS / TS</div>
+        <div class="tech"><span class="glyph">DATA</span>NumPy · pandas</div>
+        <div class="tech"><span class="glyph">DATA</span>NGS · alignments</div>
+        <div class="tech"><span class="glyph">DATA</span>Multi-omics</div>
+        <div class="tech"><span class="glyph">IMAGING</span>OpenSlide · WSI</div>
+        <div class="tech"><span class="glyph">IMAGING</span>QuPath</div>
+        <div class="tech"><span class="glyph">IMAGING</span>H&amp;E patching</div>
+        <div class="tech"><span class="glyph">CLOUD</span>GCP</div>
+        <div class="tech"><span class="glyph">CLOUD</span>AWS</div>
+        <div class="tech"><span class="glyph">CLOUD</span>Azure</div>
+        <div class="tech"><span class="glyph">INFRA</span>SLURM</div>
+        <div class="tech"><span class="glyph">INFRA</span>Docker</div>
+        <div class="tech"><span class="glyph">INFRA</span>Apptainer</div>
+        <div class="tech"><span class="glyph">INFRA</span>Snakemake</div>
+        <div class="tech"><span class="glyph">REPRO</span>Nextflow-ish</div>
+        <div class="tech"><span class="glyph">OS</span>Linux · Debian</div>
+        <div class="tech"><span class="glyph">TOOLS</span>VS Code</div>
+        <div class="tech"><span class="glyph">TOOLS</span>Notion · Markdown</div>
+        <div class="tech"><span class="glyph">TOOLS</span>Figma</div>
+        <div class="tech"><span class="glyph">VIZ</span>R Shiny</div>
+        <div class="tech"><span class="glyph">VIZ</span>D3 · Plotly</div>
+        <div class="tech"><span class="glyph">REGEX</span>(.*)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8: GALLERY -->
+  <section class="chapter" data-chapter="8" data-side="center" data-label="Gallery" data-where="◆ Frames from the road">
+    <div class="gallery-card" style="background-color: rgb(230, 239, 246)">
+      <p class="eyebrow">08 — Photography</p>
+      <h2 style="font-family:var(--serif);font-weight:400;font-size:clamp(28px,3.4vw,44px);margin:0;letter-spacing:-0.02em;">Frames from the road.</h2>
+      <p style="color:var(--ink-soft);max-width:680px;line-height:1.55;">Recently in 🇩🇪 🇳🇱 🇮🇳 🇭🇺 🇷🇺 🇫🇷 🇮🇹 — drag any photo onto a tile to fill it in.</p>
+      <div class="gallery-grid">
+        <image-slot id="g1" shape="rect" placeholder="Paris from above" src="/portfolio/images/gallery/topview-paris.jpeg"></image-slot>
+        <image-slot id="g2" shape="rect" placeholder="Arc de Triomphe" src="/portfolio/images/gallery/arc-de-triomphe.jpeg"></image-slot>
+        <image-slot id="g3" shape="rect" placeholder="Eiffel frame" src="/portfolio/images/gallery/eiffel.jpeg"></image-slot>
+        <image-slot id="g4" shape="rect" placeholder="Koblenz high view" src="/portfolio/images/gallery/koblenz-highview.jpg"></image-slot>
+        <image-slot id="g5" shape="rect" placeholder="Munich fort" src="/portfolio/images/gallery/munich-fort.jpeg"></image-slot>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9: CONTACT -->
+  <section id="contact" class="chapter" data-chapter="9" data-side="center" data-label="Contact" data-where="◆ End of the road">
+    <div class="contact-card" style="background-color: rgb(26, 43, 52)">
+      <p class="eyebrow">09 — Contact</p>
+      <h2 style="font-size:clamp(36px,4.6vw,64px);margin:0 0 12px;">Let's collaborate.</h2>
+      <p style="max-width:560px;">Looking to collaborate in glioma research using deep learning, and seeking input on advanced DL techniques in computational pathology. Happy to talk about anything in vision-for-medicine, reproducibility, or the slow craft of a thesis.</p>
+      <div class="contact-grid">
+        <a href="mailto:PranavSwaroop.Gundla@uk-essen.de"><span>EMAIL · UK-ESSEN</span><span style="font-family:var(--serif);font-size:24px;">→</span></a>
+        <a href="#"><span>LINKEDIN · PRANAV SWAROOP GUNDLA</span><span style="font-family:var(--serif);font-size:24px;">→</span></a>
+        <a href="#"><span>GOOGLE SCHOLAR · PS GUNDLA</span><span style="font-family:var(--serif);font-size:24px;">→</span></a>
+        <a href="https://psgundla.com" target="_blank" rel="noopener"><span>WEB · PSGUNDLA.COM</span><span style="font-family:var(--serif);font-size:24px;">→</span></a>
+      </div>
+      <div class="footer-meta">
+        <span>North-Rhine Westphalia, DE · +49 176 108 77090</span>
+        <span>EACR · 36044  ·  SNO · 757239</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Tweaks defaults block -->
+<script>
+  window.__TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "timeOfDay": "day",
+    "palette": "default",
+    "terrainStyle": "rolling",
+    "fogDensity": 0.021,
+    "cameraSpeed": 1,
+    "landscapeStyle": "monument"
+  }/*EDITMODE-END*/;
+</script>
+
+<!-- Three.js -->
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+
+<!-- image-slot for gallery -->
+<script src="/portfolio/js/image-slot.js"></script>
+
+<!-- App scripts -->
+<script src="/portfolio/js/scene.js"></script>
+<script src="/portfolio/js/dna.js"></script>
+<script src="/portfolio/js/page.js"></script>
+
+</body>
+</html>
